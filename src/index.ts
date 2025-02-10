@@ -12,6 +12,7 @@ type Token =
   | { type: 'LeftParen' }
   | { type: 'RightParen' }
   | { type: 'dot' }
+  | { type: 'equals' }
   | { type: 'identifier'; value: string }
   | { type: 'string'; value: string }
   | { type: 'keyword'; value: Keyword }
@@ -56,6 +57,13 @@ while (ctx.pos < content.length) {
     case ')': {
       tokens.push({
         type: 'RightParen',
+      })
+      ctx.pos++
+      continue
+    }
+    case '=': {
+      tokens.push({
+        type: 'equals',
       })
       ctx.pos++
       continue
