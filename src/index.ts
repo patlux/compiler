@@ -5,17 +5,15 @@ const KEYWORDS = ['function', 'const'] as const
 type Keyword = (typeof KEYWORDS)[number]
 
 type Token =
-  | {
-      type: 'LeftCurly'
-    }
-  | { type: 'RightCurly' }
-  | { type: 'LeftParen' }
-  | { type: 'RightParen' }
-  | { type: 'dot' }
-  | { type: 'equals' }
+  | { type: 'LeftCurly' } // {
+  | { type: 'RightCurly' } // }
+  | { type: 'LeftParen' } // (
+  | { type: 'RightParen' } // )
+  | { type: 'dot' } // .
+  | { type: 'equals' } // =
   | { type: 'identifier'; value: string }
   | { type: 'string'; value: string }
-  | { type: 'keyword'; value: Keyword }
+  | { type: 'keyword'; value: Keyword } // function, const, ...
 
 const tokens: Token[] = []
 
@@ -25,53 +23,11 @@ while (ctx.pos < content.length) {
   const char = content.charAt(ctx.pos)
   // console.log({ char })
 
-  switch (char) {
-    case '.': {
-      tokens.push({
-        type: 'dot',
-      })
-      ctx.pos++
-      continue
-    }
-    case '{': {
-      tokens.push({
-        type: 'LeftCurly',
-      })
-      ctx.pos++
-      continue
-    }
-    case '}': {
-      tokens.push({
-        type: 'RightCurly',
-      })
-      ctx.pos++
-      continue
-    }
-    case '(': {
-      tokens.push({
-        type: 'LeftParen',
-      })
-      ctx.pos++
-      continue
-    }
-    case ')': {
-      tokens.push({
-        type: 'RightParen',
-      })
-      ctx.pos++
-      continue
-    }
-    case '=': {
-      tokens.push({
-        type: 'equals',
-      })
-      ctx.pos++
-      continue
-    }
-    case ' ': {
-      ctx.pos++
-      continue
-    }
+  let token = undefined
+  if ((token = isSingle(char)) != null) {
+    tokens.push(token)
+    ctx.pos++
+    continue
   }
 
   if (isValidChar(char)) {
@@ -95,6 +51,24 @@ while (ctx.pos < content.length) {
 
   ctx.pos++
   continue
+}
+
+function isSingle(char: string): Token | null {
+  switch (char) {
+    case '.':
+      return { type: 'dot' }
+    case '{':
+      return { type: 'LeftCurly' }
+    case '}':
+      return { type: 'RightCurly' }
+    case '(':
+      return { type: 'LeftParen' }
+    case ')':
+      return { type: 'RightParen' }
+    case '=':
+      return { type: 'equals' }
+  }
+  return null
 }
 
 function isValidChar(char: string) {
