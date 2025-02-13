@@ -1,4 +1,4 @@
-const KEYWORDS = ['function', 'const'] as const
+const KEYWORDS = ['function', 'const', 'let'] as const
 type Keyword = (typeof KEYWORDS)[number]
 
 type Token =
